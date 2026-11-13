@@ -29,7 +29,7 @@ The CSV parser and decoder that `elm-motorsport-analysis` grew out of. Extracted
 | Command | Purpose |
 | --- | --- |
 | `nix run .#check` \| `flix check` | type-check |
-| `nix run .#test` \| `flix test` | 78 tests |
+| `nix run .#test` \| `flix test` | 77 tests |
 | `nix run .#build` \| `flix build` | compile |
 | `nix run .#pkg` \| `flix build-pkg` | an `.fpkg`, at `artifact/package.fpkg` |
 | `nix run .#doc` \| `flix doc` | API documentation, at `build/doc` |
@@ -42,7 +42,7 @@ CI runs `nix flake check`, `nix run .#test`, and `nix run .#pkg` on `main` and o
 
 ## Verification
 
-The 77 tests that came with the port are elm-csv's own, and passing them against the Elm behaviour they were written for is the specification. Beyond them there is one test, `test/Csv/TestReadme.flix`, pinning the README example.
+The 77 tests that came with the port are elm-csv's own, and passing them against the Elm behaviour they were written for is the specification. There is no test here that the port did not arrive with; the README example was checked against the suite while a test pinned it, and nothing now re-checks it, so a change to `decodeCsv` or to the README is where it goes stale.
 
 The second half is the consumer, and it cannot run here: `Motorsport.Wec.decoder()` is a 16-stage `intoRecord`/`pipeline` decoder over the WEC timing CSVs, and its exported JSON is committed bytes. When the consumer is switched over, the check is that its suite still passes and its exported files still hash to what it has committed.
 
