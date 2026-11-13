@@ -1,0 +1,4 @@
+[package]
+version     = "0.1.0"
+flix        = "0.79.0"
+repository  = "github:y047aka/csv"
