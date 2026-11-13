@@ -1,0 +1,39 @@
+name: Tests
+
+# One job, and it is not the specification: the specification is the 77 upstream tests
+# passing against the elm-csv behaviour they were written for. What this job is for is
+# narrower — a merged PR is one `flix release` away from a tag, and this is the only
+# automated thing standing between the two.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    timeout-minutes: 15
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - uses: DeterminateSystems/nix-installer-action@v16
+      - uses: nix-community/cache-nix-action@v7
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('flake.lock') }}
+          restore-prefixes-first-match: nix-${{ runner.os }}-
+      # No `lib/` is cached here, as a Flix project with Maven dependencies would
+      # want: this package declares no dependency, and `packages.lock` is empty.
+      # The Flix version comes from flake.lock, not from a setup action, so CI and a
+      # local `nix develop` cannot disagree about which compiler the code was checked
+      # under.
+      - name: Flake check
+        run: nix flake check
+      - name: Test
+        run: nix run .#test
+      # The release asset. `flix release` builds it too, but a tag should not be the
+      # first time anyone learns whether it still builds.
+      - name: Package
+        run: nix run .#pkg
