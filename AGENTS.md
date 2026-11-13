@@ -6,9 +6,9 @@ The CSV parser and decoder that `elm-motorsport-analysis` grew out of. Extracted
 
 - The library owns parsing a string into rows, and a row into a value. It does not own reading a file, stripping a UTF-8 BOM, or naming a failure in domain terms — the consumer does all three in `Cli.Load.CsvInput` and `Cli.Load.CsvDecode`, and those stay there.
 - `Csv.Parser` and `Csv.Decode` are elm-csv 4.0.1's `Csv.Parser` and `Csv.Decode`, and their declaration order, function names, argument order, and `errorToString` phrasing are upstream's on purpose: the two implementations are meant to be read side by side. A rename inside them is a decision to break that, not a cleanup.
-- `Csv.Decode.Extra` is the only module here with no upstream counterpart. It exists because `Util.Csv.Decode.Extra` was written to avoid an `andThen` that rebuilds a decoder per row.
+- `Csv.Decode.Extra` is not here, by decision: it is the one module the extraction carried that upstream has no counterpart to, so it is the port's own addition rather than the port, and a library whose premise is side-by-side review with elm-csv has no business carrying it. The consumer keeps its own copy — `traverse` is five lines over `map2` and `succeed`, both public here — and `Motorsport.Wec` keeps calling it at its one call site.
 - elm-csv's `Csv.Encode` is not ported. Nothing downstream needed it.
-- The extraction renamed one thing: every `Util.Csv.` became `Csv.`, and nothing else in the two source files and two test files changed. That is the whole of the local diff, and a divergence from it is a bug.
+- The extraction renamed one thing: every `Util.Csv.` became `Csv.`, and nothing else in the two source files and two test files changed. That is the whole of the local diff, and a divergence from it is a bug. `Csv.Decode.Extra` was then dropped, which is the only removal.
 
 ## Facts about Flix and about these modules already paid for; do not re-derive them
 
@@ -29,7 +29,7 @@ The CSV parser and decoder that `elm-motorsport-analysis` grew out of. Extracted
 | Command | Purpose |
 | --- | --- |
 | `nix run .#check` \| `flix check` | type-check |
-| `nix run .#test` \| `flix test` | 80 tests |
+| `nix run .#test` \| `flix test` | 78 tests |
 | `nix run .#build` \| `flix build` | compile |
 | `nix run .#pkg` \| `flix build-pkg` | an `.fpkg`, at `artifact/package.fpkg` |
 | `nix run .#doc` \| `flix doc` | API documentation, at `build/doc` |
@@ -42,7 +42,7 @@ CI runs `nix flake check`, `nix run .#test`, and `nix run .#pkg` on `main` and o
 
 ## Verification
 
-The 77 tests that came with the port are elm-csv's own, and passing them against the Elm behaviour they were written for is the specification. Beyond them, `test/Csv/TestReadme.flix` pins the README example, and `test/Csv/TestExtra.flix` is the only coverage `Extra.traverse` has anywhere.
+The 77 tests that came with the port are elm-csv's own, and passing them against the Elm behaviour they were written for is the specification. Beyond them there is one test, `test/Csv/TestReadme.flix`, pinning the README example.
 
 The second half is the consumer, and it cannot run here: `Motorsport.Wec.decoder()` is a 16-stage `intoRecord`/`pipeline` decoder over the WEC timing CSVs, and its exported JSON is committed bytes. When the consumer is switched over, the check is that its suite still passes and its exported files still hash to what it has committed.
 
@@ -53,7 +53,7 @@ Switching it over is:
 "github:y047aka/csv" = { version = "0.1.0", mount = "Csv" }
 ```
 
-then `use Util.Csv.Decode` → `use Csv::Csv.Decode` in the eight files that write it, `src/Util/Csv/` and `test/Util/Csv/` deleted, and `Util.Csv.Decode.Extra.traverse` reached as `Csv::Csv.Decode.Extra.traverse`.
+then `use Util.Csv.Decode` → `use Csv::Csv.Decode` in the eight files that write it, and `src/Util/Csv/` and `test/Util/Csv/` deleted — except `Extra.traverse`, which stays with its only caller. It cannot keep its path: `Util.Csv.Decode.Extra` is a child module, and a child cannot be declared once its parent is gone, so `traverse` moves into `Motorsport.Wec` and is written over `Csv::Csv.Decode.map2` and `Csv::Csv.Decode.succeed`, both public here.
 
 ## Comments and committing
 

@@ -23,7 +23,6 @@ Decode.decodeCsv(FieldNames.FieldNamesFromFirstRow, decoder, csv)
 
 - `Csv.Parser` — `parse({fieldSeparator = ','}, source)`, a string to `List[List[String]]`. Quoted fields, `""` escapes, `\n` and `\r\n` row separators, a trailing newline ignored. No encoding: elm-csv's `Csv.Encode` has no port here.
 - `Csv.Decode` — the decoder combinators. `string()`, `int()`, `float()`, `blank(decoder)` to `Option`; `column`, `field`, `optionalColumn`, `optionalField`, `availableFields()`; `map`, `map2`, `map3`, `intoRecord`, `pipeline`, `oneOf`, `andThen`, `succeed`, `fail`, `fromResult`, `fromMaybe`; `decodeCsv`, `decodeCustom`, `errorToString`.
-- `Csv.Decode.Extra` — the one module with no upstream counterpart. `traverse(f, list)` builds a decoder graph once where nested `andThen` would rebuild it per row.
 
 `decodeCsv` splits on `,`; anything else, including a TSV, goes through `decodeCustom({fieldSeparator = '\t'}, …)`.
 
@@ -42,4 +41,4 @@ This repository is Apache 2.0 (`LICENSE`). `src/Csv/Parser.flix` and `src/Csv/De
 
 ## What is not here
 
-`Csv.Encode`, which upstream has. Reading a file, stripping a UTF-8 BOM, and mapping a decode failure onto a domain error type, which are the caller's business — the consumer of this library does all three in twenty lines of its own.
+`Csv.Encode`, which upstream has. `Csv.Decode.Extra` and its `traverse`, which upstream has no counterpart to and which therefore counts as this port's own addition rather than as the port; a caller that wants it can write it in five lines over `map2` and `succeed`, both of which are public here. Reading a file, stripping a UTF-8 BOM, and mapping a decode failure onto a domain error type, which are the caller's business — the consumer of this library does all three in twenty lines of its own.

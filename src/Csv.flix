@@ -12,8 +12,10 @@
 ///
 /// The two modules are the upstream's own, and are named for them:
 /// `Csv.Parser` turns a string into rows of fields, `Csv.Decode` turns
-/// a row into a value through a combinator language. `Csv.Decode.Extra`
-/// is the one module here that upstream has no counterpart to.
+/// a row into a value through a combinator language. Nothing here goes
+/// beyond `Csv.Parser` and `Csv.Decode`: the one module the port came
+/// with that upstream has no counterpart to, `Csv.Decode.Extra`, is not
+/// part of this package.
 ///
 /// The parent module is declared for its children to hang from; Flix
 /// refuses a child module whose parent is undeclared, and reports the
