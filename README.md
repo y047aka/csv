@@ -19,12 +19,9 @@ Decode.decodeCsv(FieldNames.FieldNamesFromFirstRow, decoder, csv)
 // Ok(List#{("Porsche", 387), ("Toyota", 349)})
 ```
 
-## Modules
+## Interface
 
-- `Csv.Parser` — `parse({fieldSeparator = ','}, source)`, a string to `List[List[String]]`. Quoted fields, `""` escapes, `\n` and `\r\n` row separators, a trailing newline ignored. No encoding: elm-csv's `Csv.Encode` has no port here.
-- `Csv.Decode` — the decoder combinators. `string()`, `int()`, `float()`, `blank(decoder)` to `Option`; `column`, `field`, `optionalColumn`, `optionalField`, `availableFields()`; `map`, `map2`, `map3`, `intoRecord`, `pipeline`, `oneOf`, `andThen`, `succeed`, `fail`, `fromResult`, `fromMaybe`; `decodeCsv`, `decodeCustom`, `errorToString`.
-
-`decodeCsv` splits on `,`; anything else, including a TSV, goes through `decodeCustom({fieldSeparator = '\t'}, …)`.
+`Csv.Parser.parse({fieldSeparator = ','}, source)` turns a string into `List[List[String]]`: quoted fields, `""` escapes, `\n` and `\r\n` row separators, and a trailing newline that is not an empty last row. `Csv.Decode` is the combinator language over those rows, and `flix doc` is its inventory. `decodeCsv` splits on `,`; anything else, a TSV included, is `decodeCustom({fieldSeparator = '\t'}, …)`.
 
 ## Install
 
@@ -35,12 +32,6 @@ Decode.decodeCsv(FieldNames.FieldNamesFromFirstRow, decoder, csv)
 
 `csv` is a legal mount name — no hyphen to read as a minus — so the prefix and the module coincide and a `use` line reads `Csv::Csv.Decode`. A signature still writes the type `Decoder[a]`, not the mount.
 
-## Licence
-
-BSD-3-Clause, `Copyright 2021 Brian Hicks` and `Copyright 2026 Yoshitaka Totsuka`, at `LICENSE`. The port's licence covers the whole repository, which is the simpler arrangement and the one the code was already under: the parser, the decoder, and the tests that came with them are elm-csv 4.0.1's, and only the parent module, the README, the flake, and CI are new here.
-
-The notice is repeated in the header of every source file, and that is not decoration: `flix build-pkg` ships `flix.toml`, `README.md`, and `src/` and nothing else, so `LICENSE` is not in the package and the headers are the only route by which the notice reaches a package consumer.
-
 ## What is not here
 
-`Csv.Encode`, which upstream has. `Csv.Decode.Extra` and its `traverse`, which upstream has no counterpart to and which therefore counts as this port's own addition rather than as the port; a caller that wants it can write it in five lines over `map2` and `succeed`, both of which are public here. Reading a file, stripping a UTF-8 BOM, and mapping a decode failure onto a domain error type, which are the caller's business — the consumer of this library does all three in twenty lines of its own.
+`Csv.Encode`, which upstream has. `traverse`, which upstream has no counterpart to and which therefore went back to the caller that wanted it; it is five lines over `map2` and `succeed`, both public here. Reading a file, stripping a UTF-8 BOM, and naming a decode failure in domain terms, which are the caller's business.
