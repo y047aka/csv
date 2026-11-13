@@ -35,9 +35,11 @@ Decode.decodeCsv(FieldNames.FieldNamesFromFirstRow, decoder, csv)
 
 `csv` is a legal mount name — no hyphen to read as a minus — so the prefix and the module coincide and a `use` line reads `Csv::Csv.Decode`. A signature still writes the type `Decoder[a]`, not the mount.
 
-## Two licences
+## Licence
 
-This repository is Apache 2.0 (`LICENSE`). `src/Csv/Parser.flix` and `src/Csv/Decode.flix` are a port of elm-csv 4.0.1, which is BSD-3-Clause, `Copyright 2021 Brian Hicks`; its notice is at `LICENSE.elm-csv` and repeated in the header of each ported file. The repetition is not decoration: `flix build-pkg` ships `flix.toml`, `README.md`, and `src/` and nothing else, so the file headers are the only route by which the notice reaches a package consumer.
+BSD-3-Clause, `Copyright 2021 Brian Hicks` and `Copyright 2026 Yoshitaka Totsuka`, at `LICENSE`. The port's licence covers the whole repository, which is the simpler arrangement and the one the code was already under: the parser, the decoder, and the tests that came with them are elm-csv 4.0.1's, and only the parent module, the README, the flake, and CI are new here.
+
+The notice is repeated in the header of every source file, and that is not decoration: `flix build-pkg` ships `flix.toml`, `README.md`, and `src/` and nothing else, so `LICENSE` is not in the package and the headers are the only route by which the notice reaches a package consumer.
 
 ## What is not here
 

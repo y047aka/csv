@@ -1,9 +1,9 @@
 /*
  * Copyright 2021 Brian Hicks
  *
- * The Flix port of `Csv/Decode.elm` of BrianHicks/elm-csv 4.0.1, which is BSD-3-Clause.
- * The upstream notice is kept in full at LICENSE.elm-csv, as its first condition requires
- * the copyright notice to be retained in redistributed source.
+ * The Flix port of `Csv/Decode.elm` of BrianHicks/elm-csv 4.0.1, and the whole of this
+ * repository, is BSD-3-Clause; the conditions are at LICENSE, whose first one asks the
+ * redistributed source to retain this notice.
  */
 
 /// Type-safe CSV decoders, modelled after BrianHicks/elm-csv's

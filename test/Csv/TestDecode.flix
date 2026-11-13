@@ -1,3 +1,10 @@
+/*
+ * Copyright 2021 Brian Hicks
+ *
+ * Ported from `tests/Csv/DecodeTest.elm` of BrianHicks/elm-csv 4.0.1, as the rest of this
+ * repository under the BSD-3-Clause conditions at LICENSE.
+ */
+
 pub mod Csv.TestDecode {
 
     use Csv.Decode

@@ -1,9 +1,7 @@
 /*
  * Copyright 2026 Yoshitaka Totsuka
  *
- * SPDX-License-Identifier: Apache-2.0
- *
- * Use of this source code is governed by the Apache 2.0 license
+ * Use of this source code is governed by the BSD-3-Clause license
  * that can be found in the LICENSE file.
  */
 
